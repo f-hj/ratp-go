@@ -137,6 +137,25 @@ func main() {
 		return c.JSON(http.StatusOK, *stations.Return)
 	})
 
+	e.GET("/lines/:line/stations/:direction", func(c echo.Context) error {
+		line := c.Param("line")
+		direction := c.Param("direction")
+		stations, err := soapService.GetStations(&GetStations{
+			Station: &Station{
+				Line: &Line{
+					Id: &line,
+				},
+				Direction: &Direction{
+					Sens: &direction,
+				},
+			},
+		})
+		if err != nil {
+			return err
+		}
+		return c.JSON(http.StatusOK, *stations.Return)
+	})
+
 	e.GET("/lines/:line/directions", func(c echo.Context) error {
 		line := c.Param("line")
 		directions, err := soapService.GetDirections(&GetDirections{
@@ -150,7 +169,7 @@ func main() {
 		return c.JSON(http.StatusOK, *directions.Return)
 	})
 
-	e.GET("/lines/:line/stations/:station/direction/:direction/next", func(c echo.Context) error {
+	e.GET("/lines/:line/stations/:station/:direction/next", func(c echo.Context) error {
 		line := c.Param("line")
 		station := c.Param("station")
 		direction := c.Param("direction")
@@ -171,7 +190,7 @@ func main() {
 		return c.JSON(http.StatusOK, *missions.Return)
 	})
 
-	e.GET("/lines/:line/stations/:station/direction/:direction/firstAndLast", func(c echo.Context) error {
+	e.GET("/lines/:line/stations/:station/:direction/firstAndLast", func(c echo.Context) error {
 		line := c.Param("line")
 		station := c.Param("station")
 		direction := c.Param("direction")
@@ -195,7 +214,7 @@ func main() {
 		return c.JSON(http.StatusOK, *firstAndLast)
 	})
 
-	e.GET("/lines/:line/stations/:station/direction/:direction/frequency", func(c echo.Context) error {
+	e.GET("/lines/:line/stations/:station/:direction/frequency", func(c echo.Context) error {
 		line := c.Param("line")
 		station := c.Param("station")
 		direction := c.Param("direction")
