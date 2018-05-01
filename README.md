@@ -1,5 +1,4 @@
 # RATP-Go
-===
 
 ## Why Golang?
 I think it's perfect for typed objects with WSDL
@@ -10,7 +9,7 @@ I think it's perfect for typed objects with WSDL
 - Sometime we get `NullPointerException` in the body of the response
 - Some functions just don't work
 
-** And this is fucking XML! **
+**And this is fucking XML!**
 
 ## Can I contribute?
 Yes, of course
