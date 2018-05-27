@@ -50,10 +50,10 @@ type WsivPortType interface {
 
 // Direction was auto-generated from WSDL.
 type Direction struct {
-	Line            *Line      `xml:"line,omitempty" json:"line,omitempty" yaml:"line,omitempty"`
-	Name            *string    `xml:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty"`
+	Line            *Line      `xml:"http://wsiv.ratp.fr/xsd line,omitempty" json:"line,omitempty" yaml:"line,omitempty"`
+	Name            *string    `xml:"http://wsiv.ratp.fr/xsd name,omitempty" json:"name,omitempty" yaml:"name,omitempty"`
 	Sens            *string    `xml:"http://wsiv.ratp.fr/xsd sens,omitempty" json:"sens,omitempty" yaml:"sens,omitempty"`
-	StationsEndLine []*Station `xml:"stationsEndLine,omitempty" json:"stationsEndLine,omitempty" yaml:"stationsEndLine,omitempty"`
+	StationsEndLine []*Station `xml:"http://wsiv.ratp.fr/xsd stationsEndLine,omitempty" json:"stationsEndLine,omitempty" yaml:"stationsEndLine,omitempty"`
 }
 
 // GeoPoint was auto-generated from WSDL.
@@ -112,7 +112,7 @@ type Perturbation struct {
 	Id          *string                  `xml:"id,omitempty" json:"id,omitempty" yaml:"id,omitempty"`
 	Incidents   []*PerturbationIncident  `xml:"incidents,omitempty" json:"incidents,omitempty" yaml:"incidents,omitempty"`
 	Level       *string                  `xml:"level,omitempty" json:"level,omitempty" yaml:"level,omitempty"`
-	Line        *Line                    `xml:"line,omitempty" json:"line,omitempty" yaml:"line,omitempty"`
+	Line        *Line                    `xml:"http://wsiv.ratp.fr/xsd line,omitempty" json:"line,omitempty" yaml:"line,omitempty"`
 	Media       *string                  `xml:"media,omitempty" json:"media,omitempty" yaml:"media,omitempty"`
 	Message     *PerturbationMessage     `xml:"message,omitempty" json:"message,omitempty" yaml:"message,omitempty"`
 	Source      *string                  `xml:"source,omitempty" json:"source,omitempty" yaml:"source,omitempty"`
@@ -168,7 +168,7 @@ type PerturbationMessage struct {
 
 // Reseau was auto-generated from WSDL.
 type Reseau struct {
-	Code  *string `xml:"code,omitempty" json:"code,omitempty" yaml:"code,omitempty"`
+	Code  *string `xml:"http://wsiv.ratp.fr/xsd code,omitempty" json:"code,omitempty" yaml:"code,omitempty"`
 	Id    *string `xml:"id,omitempty" json:"id,omitempty" yaml:"id,omitempty"`
 	Image *string `xml:"image,omitempty" json:"image,omitempty" yaml:"image,omitempty"`
 	Name  *string `xml:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty"`
@@ -183,7 +183,7 @@ type Station struct {
 	IdsNextA    []*string    `xml:"idsNextA,omitempty" json:"idsNextA,omitempty" yaml:"idsNextA,omitempty"`
 	IdsNextR    []*string    `xml:"idsNextR,omitempty" json:"idsNextR,omitempty" yaml:"idsNextR,omitempty"`
 	Line        *Line        `xml:"http://wsiv.ratp.fr/xsd line,omitempty" json:"line,omitempty" yaml:"line,omitempty"`
-	Name        *string      `xml:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty"`
+	Name        *string      `xml:"http://wsiv.ratp.fr/xsd name,omitempty" json:"name,omitempty" yaml:"name,omitempty"`
 	StationArea *StationArea `xml:"stationArea,omitempty" json:"stationArea,omitempty" yaml:"stationArea,omitempty"`
 }
 
@@ -338,10 +338,10 @@ type GetMissionsFirstLastResponse struct {
 type GetMissionsFrequency struct {
 	Station        *Station   `xml:"http://wsiv.ratp.fr station,omitempty" json:"station,omitempty" yaml:"station,omitempty"`
 	Direction      *Direction `xml:"http://wsiv.ratp.fr direction,omitempty" json:"direction,omitempty" yaml:"direction,omitempty"`
-	StationEndLine *Station   `xml:"stationEndLine,omitempty" json:"stationEndLine,omitempty" yaml:"stationEndLine,omitempty"`
-	StationEnd     *Station   `xml:"stationEnd,omitempty" json:"stationEnd,omitempty" yaml:"stationEnd,omitempty"`
-	DatesStart     []*string  `xml:"datesStart,omitempty" json:"datesStart,omitempty" yaml:"datesStart,omitempty"`
-	DatesEnd       []*string  `xml:"datesEnd,omitempty" json:"datesEnd,omitempty" yaml:"datesEnd,omitempty"`
+	StationEndLine *Station   `xml:"http://wsiv.ratp.fr stationEndLine,omitempty" json:"stationEndLine,omitempty" yaml:"stationEndLine,omitempty"`
+	StationEnd     *Station   `xml:"http://wsiv.ratp.fr stationEnd,omitempty" json:"stationEnd,omitempty" yaml:"stationEnd,omitempty"`
+	DatesStart     []*string  `xml:"http://wsiv.ratp.fr datesStart,omitempty" json:"datesStart,omitempty" yaml:"datesStart,omitempty"`
+	DatesEnd       []*string  `xml:"http://wsiv.ratp.fr datesEnd,omitempty" json:"datesEnd,omitempty" yaml:"datesEnd,omitempty"`
 }
 
 // GetMissionsFrequencyResponse was auto-generated from WSDL.
@@ -353,7 +353,7 @@ type GetMissionsFrequencyResponse struct {
 type GetMissionsNext struct {
 	Station   *Station   `xml:"http://wsiv.ratp.fr station,omitempty" json:"station,omitempty" yaml:"station,omitempty"`
 	Direction *Direction `xml:"http://wsiv.ratp.fr direction,omitempty" json:"direction,omitempty" yaml:"direction,omitempty"`
-	DateStart *string    `xml:"dateStart,omitempty" json:"dateStart,omitempty" yaml:"dateStart,omitempty"`
+	DateStart *string    `xml:"http://wsiv.ratp.fr dateStart,omitempty" json:"dateStart,omitempty" yaml:"dateStart,omitempty"`
 	Limit     *int       `xml:"limit,omitempty" json:"limit,omitempty" yaml:"limit,omitempty"`
 }
 
@@ -364,8 +364,8 @@ type GetMissionsNextResponse struct {
 
 // GetPerturbations was auto-generated from WSDL.
 type GetPerturbations struct {
-	Perturbation *Perturbation `xml:"perturbation,omitempty" json:"perturbation,omitempty" yaml:"perturbation,omitempty"`
-	IsXmlText    *bool         `xml:"isXmlText,omitempty" json:"isXmlText,omitempty" yaml:"isXmlText,omitempty"`
+	Perturbation *Perturbation `xml:"http://wsiv.ratp.fr perturbation,omitempty" json:"perturbation,omitempty" yaml:"perturbation,omitempty"`
+	IsXmlText    *bool         `xml:"http://wsiv.ratp.fr isXmlText,omitempty" json:"isXmlText,omitempty" yaml:"isXmlText,omitempty"`
 }
 
 // GetPerturbationsResponse was auto-generated from WSDL.
@@ -376,7 +376,7 @@ type GetPerturbationsResponse struct {
 // GetStations was auto-generated from WSDL.
 type GetStations struct {
 	Station   *Station  `xml:"http://wsiv.ratp.fr station,omitempty" json:"station,omitempty" yaml:"station,omitempty"`
-	Gp        *GeoPoint `xml:"gp,omitempty" json:"gp,omitempty" yaml:"gp,omitempty"`
+	Gp        *GeoPoint `xml:"http://wsiv.ratp.fr gp,omitempty" json:"gp,omitempty" yaml:"gp,omitempty"`
 	Distances []*int    `xml:"distances,omitempty" json:"distances,omitempty" yaml:"distances,omitempty"`
 	Limit     *int      `xml:"limit,omitempty" json:"limit,omitempty" yaml:"limit,omitempty"`
 	SortAlpha *bool     `xml:"sortAlpha,omitempty" json:"sortAlpha,omitempty" yaml:"sortAlpha,omitempty"`

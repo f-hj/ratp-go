@@ -32,7 +32,8 @@ type APIError struct {
 
 func main() {
 	cli := soap.Client{
-		URL:           "http://opendata-tr.ratp.fr/wsiv/services/Wsiv",
+		URL: "https://rapt-wsiv.kiwi.fruitice.fr/wsiv/services/Wsiv",
+		//URL:           "http://opendata-tr.ratp.fr/wsiv/services/Wsiv",
 		Namespace:     "http://wsiv.ratp.fr/xsd",
 		ThisNamespace: "http://wsiv.ratp.fr",
 		Header:        "",
@@ -58,14 +59,22 @@ func main() {
 		if he, ok := err.(*soap.HTTPError); ok {
 			c.JSON(http.StatusServiceUnavailable, APIError{
 				Err:  "RATP error",
-				Info: "SOAP from RATP sent an unrecoverable error.",
+				Info: "SOAP from RATP sent an unrecoverable error",
+				Body: he,
+			})
+			return
+		}
+		if he, ok := err.(*echo.HTTPError); ok {
+			c.JSON(he.Code, APIError{
+				Err:  he.Message.(string),
+				Info: "Normal API error (this is your fault, check the doc!)",
 				Body: he,
 			})
 			return
 		}
 		c.JSON(http.StatusInternalServerError, APIError{
 			Err:  "Internal error",
-			Info: "This is logged, sorry.",
+			Info: "This is logged, sorry",
 			Body: err,
 		})
 		c.Logger().Error(err)
@@ -119,6 +128,21 @@ func main() {
 		return c.JSON(http.StatusOK, prettyLines)
 	})
 
+	e.GET("/lines/:line/perturbations", func(c echo.Context) error {
+		line := c.Param("line")
+		perturbations, err := soapService.GetPerturbations(&GetPerturbations{
+			Perturbation: &Perturbation{
+				Line: &Line{
+					Id: &line,
+				},
+			},
+		})
+		if err != nil {
+			return err
+		}
+		return c.JSON(http.StatusOK, *perturbations.Return)
+	})
+
 	e.GET("/lines/:line/stations", func(c echo.Context) error {
 		line := c.Param("line")
 		stations, err := soapService.GetStations(&GetStations{
@@ -137,7 +161,7 @@ func main() {
 		return c.JSON(http.StatusOK, *stations.Return)
 	})
 
-	e.GET("/lines/:line/stations/:direction", func(c echo.Context) error {
+	e.GET("/lines/:line/stations/way/:direction", func(c echo.Context) error {
 		line := c.Param("line")
 		direction := c.Param("direction")
 		stations, err := soapService.GetStations(&GetStations{
@@ -186,7 +210,7 @@ func main() {
 		return c.JSON(http.StatusOK, *missions.Return)
 	})
 
-	e.GET("/lines/:line/stations/:station/direction/:direction/next", func(c echo.Context) error {
+	e.GET("/lines/:line/stations/:station/way/:direction/next", func(c echo.Context) error {
 		line := c.Param("line")
 		station := c.Param("station")
 		direction := c.Param("direction")
@@ -207,7 +231,38 @@ func main() {
 		return c.JSON(http.StatusOK, *missions.Return)
 	})
 
-	e.GET("/lines/:line/stations/:station/direction/:direction/firstAndLast", func(c echo.Context) error {
+	e.GET("/lines/:line/stations/:station/direction/:direction/next", func(c echo.Context) error {
+		line := c.Param("line")
+		station := c.Param("station")
+		direction := c.Param("direction")
+		missions, err := soapService.GetMissionsNext(&GetMissionsNext{
+			Station: &Station{
+				Id: &station,
+				Line: &Line{
+					Id: &line,
+				},
+			},
+			Direction: &Direction{
+				Line: &Line{
+					Id: &line,
+				},
+				StationsEndLine: [](*Station){
+					&Station{
+						Id: &direction,
+						Line: &Line{
+							Id: &line,
+						},
+					},
+				},
+			},
+		})
+		if err != nil {
+			return err
+		}
+		return c.JSON(http.StatusOK, *missions.Return)
+	})
+
+	e.GET("/lines/:line/stations/:station/way/:direction/firstAndLast", func(c echo.Context) error {
 		line := c.Param("line")
 		station := c.Param("station")
 		direction := c.Param("direction")
@@ -228,14 +283,14 @@ func main() {
 		if err != nil {
 			return err
 		}
-		return c.JSON(http.StatusOK, *firstAndLast)
+		return c.JSON(http.StatusOK, *firstAndLast.Return)
 	})
 
-	e.GET("/lines/:line/stations/:station/direction/:direction/frequency", func(c echo.Context) error {
+	e.GET("/lines/:line/stations/:station/way/:direction/frequency", func(c echo.Context) error {
 		line := c.Param("line")
 		station := c.Param("station")
 		direction := c.Param("direction")
-		firstAndLast, err := soapService.GetMissionsFrequency(&GetMissionsFrequency{
+		frequency, err := soapService.GetMissionsFrequency(&GetMissionsFrequency{
 			Station: &Station{
 				Id: &station,
 				Line: &Line{
@@ -249,7 +304,45 @@ func main() {
 		if err != nil {
 			return err
 		}
-		return c.JSON(http.StatusOK, *firstAndLast)
+		return c.JSON(http.StatusOK, *frequency.Return)
+	})
+
+	e.GET("/lines/:line/stations/:station/way/:way/direction/:direction/frequency", func(c echo.Context) error {
+		line := c.Param("line")
+		station := c.Param("station")
+		way := c.Param("way")
+		direction := c.Param("direction")
+		frequency, err := soapService.GetMissionsFrequency(&GetMissionsFrequency{
+			Station: &Station{
+				Id: &station,
+				Line: &Line{
+					Id: &line,
+				},
+			},
+			Direction: &Direction{
+				Sens: &way,
+			},
+			StationEndLine: &Station{
+				Id: &direction,
+			},
+		})
+		if err != nil {
+			return err
+		}
+		return c.JSON(http.StatusOK, *frequency.Return)
+	})
+
+	e.GET("/stations/search/:req", func(c echo.Context) error {
+		req := c.Param("req")
+		stations, err := soapService.GetStations(&GetStations{
+			Station: &Station{
+				Name: &req,
+			},
+		})
+		if err != nil {
+			return err
+		}
+		return c.JSON(http.StatusOK, *stations.Return)
 	})
 
 	// Start server
