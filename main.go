@@ -107,11 +107,14 @@ func main() {
 
 	e.GET("/prettyLines", func(c echo.Context) error {
 		lines, err := soapService.GetLines(&GetLines{&Line{}})
+
 		if err != nil {
 			return err
 		}
 		prettyLines := PrettyLines{}
 		for _, line := range lines.Return {
+			line.ComputedCode = line.GetComputedCode()
+
 			if *line.Reseau.Code == "metro" {
 				prettyLines.Metros = append(prettyLines.Metros, *line)
 			}

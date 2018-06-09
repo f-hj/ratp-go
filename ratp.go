@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/fiorix/wsdl2go/soap"
 )
@@ -86,6 +87,21 @@ type Line struct {
 	Name     *string `xml:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty"`
 	Realm    *string `xml:"realm,omitempty" json:"realm,omitempty" yaml:"realm,omitempty"`
 	Reseau   *Reseau `xml:"reseau,omitempty" json:"reseau,omitempty" yaml:"reseau,omitempty"`
+
+	ComputedCode string `xml:"computedCode,omitempty" json:"computedCode,omitempty"`
+}
+
+func (line *Line) GetComputedCode() string {
+	switch *line.Reseau.Code {
+	case "metro":
+		return "M" + strings.ToUpper(*line.Code)
+	case "rer":
+		return "R" + *line.Code
+	case "tram":
+		return "B" + *line.Code
+	default:
+		return *line.Code
+	}
 }
 
 // Mission was auto-generated from WSDL.
