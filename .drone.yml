@@ -1,0 +1,38 @@
+kind: pipeline
+name: default
+
+steps:
+- name: docker-push
+  image: plugins/docker
+  environment:
+    DOCKER_USERNAME:
+      from_secret: docker_username
+    DOCKER_PASSWORD:
+      from_secret: docker_password
+    PLUGIN_REPO: docker-registry.fruitice.fr/ratp-go
+    PLUGIN_REGISTRY: docker-registry.fruitice.fr
+    PLUGIN_TAG: ${DRONE_COMMIT}
+  privileged: true
+  when:
+    branch: master
+    event: push
+    status: success
+
+- name: kube-push
+  image: quay.io/honestbee/drone-kubernetes
+  environment:
+    KUBERNETES_SERVER:
+      from_secret: kubernetes_server
+    KUBERNETES_CERT:
+      from_secret: kubernetes_cert
+    KUBERNETES_TOKEN:
+      from_secret: kubernetes_token
+    PLUGIN_NAMESPACE: default
+    PLUGIN_DEPLOYMENT: ratp-go
+    PLUGIN_REPO: docker-registry.fruitice.fr/ratp-go
+    PLUGIN_CONTAINER: ratp-go
+    PLUGIN_TAG: ${DRONE_COMMIT}
+  when:
+    branch: master
+    event: push
+    status: success
