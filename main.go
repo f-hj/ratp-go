@@ -32,8 +32,7 @@ type APIError struct {
 
 func main() {
 	cli := soap.Client{
-		URL: "https://rapt-wsiv.kiwi.fruitice.fr/wsiv/services/Wsiv",
-		//URL:           "http://opendata-tr.ratp.fr/wsiv/services/Wsiv",
+		URL:           "http://opendata-tr.ratp.fr/wsiv/services/Wsiv",
 		Namespace:     "http://wsiv.ratp.fr/xsd",
 		ThisNamespace: "http://wsiv.ratp.fr",
 		Header:        "",
