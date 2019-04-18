@@ -96,6 +96,10 @@ func main() {
 		})
 	})
 
+	e.GET("/health", func(c echo.Context) error {
+		return c.String(http.StatusOK, "OK")
+	})
+
 	e.GET("/lines", func(c echo.Context) error {
 		lines, err := soapService.GetLines(&GetLines{&Line{}})
 		if err != nil {
